@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Campus Safety · Sensor overview</title><link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script></head>
+<body>
+<aside class="sidebar">
+ <a class="brand" href="/" aria-label="Campus Safety home"><span class="brand-icon">◈</span><span>Campus<span class="brand-sub">Safety workspace</span></span></a>
+ <div class="nav-current"><span>▦</span> Sensor overview</div>
+ <section class="scenario-section"><h2>Scenario library</h2><p>Explore how signals become an assessment.</p>
+ <div class="scenario-list">
+ <button data-scenario="normal"><span class="scenario-symbol">≈</span><span>Normal activity<small>Everyday noise and movement</small></span></button>
+ <button data-scenario="altercation"><span class="scenario-symbol">ϟ</span><span>Possible altercation<small>Sustained noise with motion</small></span></button>
+ <button data-scenario="distress"><span class="scenario-symbol">⌁</span><span>Possible distress<small>Acoustic spike, then inactivity</small></span></button>
+ </div>
+ <details><summary>Additional test scenarios <span>+</span></summary><div class="scenario-list secondary"><button data-scenario="benign_loud">Benign loud event</button><button data-scenario="vape_only">Vape-only reading</button><button data-scenario="missing_data">Missing sensor data</button></div></details>
+ </section>
+ <div class="privacy-note"><span class="shield">◇</span><h2>Awareness without surveillance.</h2><p>Environmental metadata only. No cameras, identities, facial recognition, or stored raw audio.</p><span class="privacy-tag">Privacy by design</span></div>
+ <div class="sidebar-footer">Campus Safety <span>Prototype v1.0</span></div>
+</aside>
+<div class="workspace">
+ <header class="topbar"><div>Workspace <span>/</span> Sensor overview</div><span class="demo-badge"><i></i> Synthetic demo</span></header>
+ <main>
+ <div class="page-heading"><div><h1>A clearer picture.<br><span>A smaller footprint.</span></h1><p>Understand activity in camera-restricted spaces.</p></div><button id="reset" class="reset" aria-label="Reset demo">↺ <span>Reset demo</span></button></div>
+ <div class="demo-notice"><span>ⓘ</span> All readings are synthetic test data. Assessments do not represent real events.</div>
+ <section class="location-header"><div class="location-icon">▤</div><div><h2 id="location">Camera-restricted space</h2><p id="location-detail">Choose a scenario to explore sensor activity</p></div><span id="feed-status" class="feed-status">Awaiting scenario</span></section>
+ <div id="error" class="error" role="alert" hidden></div>
+ <section class="metrics" aria-label="Latest sensor readings">
+ <div><span>Noise level</span><strong id="noise">—</strong><small>Acoustic intensity · no audio recorded</small></div>
+ <div><span>Motion</span><strong id="motion">—</strong><small>Presence of movement · no identities</small></div>
+ <div><span>Vape index</span><strong id="vape">—</strong><small>Context only · excluded from risk</small></div>
+ <div><span>Latest reading</span><strong id="time">—</strong><small>Time in the synthetic replay</small></div>
+ </section>
+ <div class="analysis-grid">
+ <section class="timeline panel"><div class="panel-heading"><div><h2>Signal timeline</h2><p id="timeline-subtitle">Noise and motion, viewed together.</p></div><span class="legend"><i></i> Noise <b></b> Motion</span></div><div id="chart" class="chart"><div class="empty-chart"><span>⌁</span><h3>Every signal tells part of the story.</h3><p>Select a scenario to see noise and motion over time.</p></div></div><div class="chart-footer"><span>Environmental readings</span><span id="sample-count">No samples loaded</span></div></section>
+ <section id="assessment" class="assessment panel" aria-live="polite"><div class="panel-heading"><h2>Assessment</h2><span class="status-dot"></span></div><div id="assessment-body"><div class="assessment-icon">◇</div><h3>Ready when you are</h3><p>Run a scenario to see an explainable assessment and recommended next step.</p><div class="idle-guide">Start with <strong>Normal activity</strong> in the scenario library.</div></div></section>
+ </div>
+ <details class="readings panel"><summary>Reading details <span id="reading-count">Explore the underlying metadata</span><b>+</b></summary><div class="table-scroll"><table><thead><tr><th scope="col">Time</th><th scope="col">Location</th><th scope="col">Noise (dB)</th><th scope="col">Motion</th><th scope="col">Vape index</th></tr></thead><tbody id="readings-body"><tr><td colspan="5">Select a scenario to load readings.</td></tr></tbody></table></div></details>
+ <footer class="main-footer"><span>◇ Built for spaces where privacy matters.</span><span>Noise + motion → explainable assessment</span></footer>
+ </main>
+</div>
+</body></html>

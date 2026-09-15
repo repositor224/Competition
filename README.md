@@ -6,25 +6,27 @@ to flag possible altercations or medical/personal distress events.
 
 ## How it works
 
-1. `src/scenarios.py` loads one of three synthetic sensor scenarios as a pandas DataFrame.
+1. `src/scenarios.py` loads one of six synthetic sensor scenarios as a pandas DataFrame.
 2. `src/detector.py` analyzes the DataFrame and returns a structured risk assessment.
-3. `app.py` is a Streamlit dashboard that ties the two together and displays the result.
+3. `app.py` serves a custom HTML/CSS/JavaScript dashboard and a JSON API. The frontend renders sensor timelines and explainable assessments without a frontend build step.
 
 ## Setup
 
 ```bash
 pip install -r requirements.txt
-streamlit run app.py
+python app.py
 ```
+
+Open http://127.0.0.1:8000 in your browser. Use `python app.py --port 8001` to choose another port. The server binds to localhost and is intended for the local synthetic demo.
 
 ## Usage
 
 Click one of the three primary buttons to simulate a scenario:
 
 - **Normal Activity** → expected result: `NORMAL`
-- **Simulate Altercation** → expected result: `POSSIBLE_ALTERCATION`
-- **Simulate Distress** → expected result: `POSSIBLE_DISTRESS`
-- **Reset** → clears the current alert and returns to a clean idle state
+- **Possible altercation** → expected result: `POSSIBLE_ALTERCATION`
+- **Possible distress** → expected result: `POSSIBLE_DISTRESS`
+- **Reset demo** → clears the current alert and returns to a clean idle state
 
 An "Additional test scenarios" expander exposes three optional negative-control
 scenarios from the PRD test plan:
@@ -54,7 +56,11 @@ heuristic risk assessment with reasons and a recommended action.
 
 ```
 campus-safety/
-├── app.py                    # Dashboard + integration
+├── app.py                    # Local HTTP server + scenario API
+├── web/
+│   ├── index.html            # Accessible dashboard structure
+│   ├── styles.css            # Responsive layout and design tokens
+│   └── app.js                # Scenario controls, charts, assessments
 ├── requirements.txt
 ├── data/
 │   ├── normal.csv
