@@ -14,27 +14,38 @@
  <details><summary>Additional test scenarios <span>+</span></summary><div class="scenario-list secondary"><button data-scenario="benign_loud">Benign loud event</button><button data-scenario="vape_only">Vape-only reading</button><button data-scenario="missing_data">Missing sensor data</button></div></details>
  </section>
  <div class="privacy-note"><span class="shield">◇</span><h2>Awareness without surveillance.</h2><p>Environmental metadata only. No cameras, identities, facial recognition, or stored raw audio.</p><span class="privacy-tag">Privacy by design</span></div>
- <div class="sidebar-footer">Campus Safety <span>Prototype v1.0</span></div>
+ <div class="sidebar-footer">Campus Safety <span>Demo workspace</span></div>
 </aside>
 <div class="workspace">
- <header class="topbar"><div>Workspace <span>/</span> Sensor overview</div><span class="demo-badge"><i></i> Synthetic demo</span></header>
+ <header class="topbar"><div>Workspace <span>/</span> Sensor overview</div><span class="demo-badge"><i></i> Demo</span></header>
  <main>
- <div class="page-heading"><div><h1>A clearer picture.<br><span>A smaller footprint.</span></h1><p>Understand activity in camera-restricted spaces.</p></div><button id="reset" class="reset" aria-label="Reset demo">↺ <span>Reset demo</span></button></div>
- <div class="demo-notice"><span>ⓘ</span> All readings are synthetic test data. Assessments do not represent real events.</div>
- <section class="location-header"><div class="location-icon">▤</div><div><h2 id="location">Camera-restricted space</h2><p id="location-detail">Choose a scenario to explore sensor activity</p></div><span id="feed-status" class="feed-status">Awaiting scenario</span></section>
+ <div class="page-heading"><div><h1>From signal to response.</h1><p>Watch the evidence build. Know when to check in.</p></div><button id="reset" class="reset" aria-label="Reset demo">↺ <span>Reset demo</span></button></div>
+ <section class="replay-controls" aria-label="Simulation controls">
+ <div><span class="control-caption">Scenario replay</span><strong id="selected-scenario">Normal activity</strong></div>
+ <div class="playback-actions"><label for="speed">Speed</label><select id="speed"><option value="1">1×</option><option value="5" selected>5×</option><option value="10">10×</option></select><button id="run" class="primary-button">▶ Run simulation</button><button id="pause" class="reset" disabled>Pause</button></div>
+ <div class="replay-progress"><progress id="progress" max="100" value="0" aria-label="Replay progress"></progress><span id="progress-label" role="status">Ready to run</span></div>
+ </section>
+ <section class="location-header"><div class="location-icon">▤</div><div><h2 id="location">Camera-restricted space</h2><p id="location-detail">Run a scenario to follow the evidence</p></div><span id="feed-status" class="feed-status">Awaiting scenario</span></section>
  <div id="error" class="error" role="alert" hidden></div>
  <section class="metrics" aria-label="Latest sensor readings">
  <div><span>Noise level</span><strong id="noise">—</strong><small>Acoustic intensity · no audio recorded</small></div>
  <div><span>Motion</span><strong id="motion">—</strong><small>Presence of movement · no identities</small></div>
  <div><span>Vape index</span><strong id="vape">—</strong><small>Context only · excluded from risk</small></div>
- <div><span>Latest reading</span><strong id="time">—</strong><small>Time in the synthetic replay</small></div>
+ <div><span>Latest reading</span><strong id="time">—</strong><small>Time in the scenario replay</small></div>
+ </section>
+ <section class="engine-strip" aria-label="Detection engine">
+ <div class="engine-title"><span class="engine-orbit" id="engine-orbit">⌁</span><div><h2>Detection engine</h2><span id="engine-status">Standing by</span></div></div>
+ <div class="engine-stage"><span>01</span><div>Read signals<small id="stage-signals">Noise + motion</small></div></div>
+ <div class="engine-stage"><span>02</span><div>Find a pattern<small id="stage-pattern">Evaluate readings together</small></div></div>
+ <div class="engine-stage"><span>03</span><div>Surface a response<small id="stage-response">Human review when needed</small></div></div>
  </section>
  <div class="analysis-grid">
- <section class="timeline panel"><div class="panel-heading"><div><h2>Signal timeline</h2><p id="timeline-subtitle">Noise and motion, viewed together.</p></div><span class="legend"><i></i> Noise <b></b> Motion</span></div><div id="chart" class="chart"><div class="empty-chart"><span>⌁</span><h3>Every signal tells part of the story.</h3><p>Select a scenario to see noise and motion over time.</p></div></div><div class="chart-footer"><span>Environmental readings</span><span id="sample-count">No samples loaded</span></div></section>
- <section id="assessment" class="assessment panel" aria-live="polite"><div class="panel-heading"><h2>Assessment</h2><span class="status-dot"></span></div><div id="assessment-body"><div class="assessment-icon">◇</div><h3>Ready when you are</h3><p>Run a scenario to see an explainable assessment and recommended next step.</p><div class="idle-guide">Start with <strong>Normal activity</strong> in the scenario library.</div></div></section>
+ <section class="timeline panel"><div class="panel-heading"><div><h2>Signal timeline</h2><p id="timeline-subtitle">Noise and motion, viewed together.</p></div><span class="legend"><i></i> Noise <b></b> Motion</span></div><div id="chart" class="chart"><div class="empty-chart"><span>⌁</span><h3>The next reading could change the picture.</h3><p>Press Run simulation to start the sensor timeline.</p></div></div><div class="chart-footer"><span>Environmental readings</span><span id="sample-count">Awaiting first reading</span></div></section>
+ <section id="assessment" class="assessment panel" aria-live="polite"><div class="panel-heading"><h2>Assessment</h2><span class="status-dot"></span></div><div id="assessment-body"><div class="assessment-icon">◇</div><h3>Ready when you are</h3><p>Run a scenario to see an explainable assessment and recommended next step.</p><div class="idle-guide">Select a scenario, then press <strong>Run simulation</strong>.</div></div></section>
  </div>
+ <section class="panel event-panel"><div class="panel-heading"><div><h2>Event trail</h2><p>The readings, decisions, and review actions in this run.</p></div><span id="event-count" class="feed-status">0 events</span></div><ol id="events" class="event-list"><li class="event-empty">The trail begins when you run a simulation.</li></ol></section>
  <details class="readings panel"><summary>Reading details <span id="reading-count">Explore the underlying metadata</span><b>+</b></summary><div class="table-scroll"><table><thead><tr><th scope="col">Time</th><th scope="col">Location</th><th scope="col">Noise (dB)</th><th scope="col">Motion</th><th scope="col">Vape index</th></tr></thead><tbody id="readings-body"><tr><td colspan="5">Select a scenario to load readings.</td></tr></tbody></table></div></details>
- <footer class="main-footer"><span>◇ Built for spaces where privacy matters.</span><span>Noise + motion → explainable assessment</span></footer>
+ <footer class="main-footer"><span>◇ Built for spaces where privacy matters.</span><span>Demo mode · No live sensor connection</span></footer>
  </main>
 </div>
 </body></html>

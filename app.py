@@ -6,8 +6,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
-from src.scenarios import load_scenario
-from src.detector import analyze
+from src.replay import build_replay
 
 WEB_DIR = Path(__file__).parent / "web"
 
@@ -19,9 +18,7 @@ class DashboardHandler(SimpleHTTPRequestHandler):
             return super().do_GET()
         name = parse_qs(url.query).get("name", ["normal"])[0]
         try:
-            df = load_scenario(name)
-            payload = {"name": name, "readings": json.loads(df.to_json(orient="records")),
-                       "assessment": analyze(df)}
+            payload = build_replay(name)
             self.send_json(200, payload)
         except ValueError:
             self.send_json(400, {"error": "Choose one of the available scenarios."})

@@ -7,7 +7,7 @@ to flag possible altercations or medical/personal distress events.
 ## How it works
 
 1. `src/scenarios.py` loads one of six synthetic sensor scenarios as a pandas DataFrame.
-2. `src/detector.py` analyzes the DataFrame and returns a structured risk assessment.
+2. `src/replay.py` calls `src/detector.py` on each prefix of the readings. Future readings are never included in an earlier assessment.
 3. `app.py` serves a custom HTML/CSS/JavaScript dashboard and a JSON API. The frontend renders sensor timelines and explainable assessments without a frontend build step.
 
 ## Setup
@@ -21,7 +21,7 @@ Open http://127.0.0.1:8000 in your browser. Use `python app.py --port 8001` to c
 
 ## Usage
 
-Click one of the three primary buttons to simulate a scenario:
+Select a scenario, then click **Run simulation**. Readings appear sequentially, with the corresponding Python-engine assessment. The default 5× replay shows five seconds of sensor time per second; 1× and 10× are also available. Use **Pause / Resume**, **Restart simulation**, or **Reset demo** to control playback. Selecting another scenario cancels the current run.
 
 - **Normal Activity** → expected result: `NORMAL`
 - **Possible altercation** → expected result: `POSSIBLE_ALTERCATION`
@@ -37,7 +37,7 @@ scenarios from the PRD test plan:
 
 Each scenario shows the latest sensor readings (location, time, noise, motion, vape
 index), a noise-over-time line chart, a motion bar chart, and the detector's
-heuristic risk assessment with reasons and a recommended action.
+heuristic risk assessment with reasons and a recommended action. The detection-engine strip and event trail show progress. **Acknowledge for review** records an operator action in the current browser run only; it does not dispatch responders, send notifications, or persist after reset/reload.
 
 ## Detection logic (heuristic, not a calibrated probability)
 
@@ -71,6 +71,7 @@ campus-safety/
 │   └── missing_data.csv      # optional test scenario (S6)
 ├── src/
 │   ├── scenarios.py          # load_scenario(name) -> DataFrame
+│   ├── replay.py             # assessments using only each reading prefix
 │   └── detector.py           # analyze(df) -> result dict
 └── README.md
 ```
@@ -90,3 +91,32 @@ No real Verkada API/hardware integration, no raw audio or video processing, no
 ML training or calibrated probability claims, no autonomous dispatch/locking
 actions, and no auth, database, or notification infrastructure. This is a
 single-page synthetic-data MVP intended for a 60-90 second demo.
+
+## Frontend provenance
+
+The event trail adapts the timestamp, status badge, and vertical connector pattern from
+[Incident Status Timeline by cnippet-dev](https://21st.dev/@cnippet-dev/components/incident-status-timeline),
+retrieved through the official 21st.dev MCP. It uses the existing vanilla frontend;
+no React dependencies or API keys are shipped to the browser.
+
+## Detection concept (not implemented)
+
+A future acoustic pipeline could compute short-time Fourier transforms on-device
+and extract frequency-band energy, duration, and repeated-impact features. This
+requires access to waveform samples: the current five-second dB summaries cannot
+recover the original sound spectrum. Avoiding stored audio would require deliberate
+on-device processing and discarding the temporary waveform.
+
+Spectral features could help distinguish types of acoustic events, but cannot by
+themselves establish bullying, intent, or whether someone is being harmed. Such a
+system would need representative labeled examples, testing against benign events,
+and measured false-positive and missed-event rates. Human review remains necessary.
+The current engine uses only the existing noise/motion rules. No FFT, audio analysis,
+or bullying classifier is implemented.
+
+## Verification
+
+```bash
+python -m unittest discover -s tests -v
+node --check web/app.js
+```
